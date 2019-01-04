@@ -4,30 +4,26 @@
 package bitcamp.lms;
 
 public class App3 {
-    public String getGreeting() {
-        return "번호: 1\n"
-            + "내용: 게시글입니다.\n"
-            + "작성일: 2019-01-01\n"
-            + "조회수: 0\n";
-    }
+ public static void main (String[]agr) {
+   java.util.Scanner keyboard = new java.util.Scanner(System.in);
+   java.util.Date today = new java.util.Date();
+   
+   System.out.println("번호 : ");
+   int number = keyboard.nextInt();
+   
+   keyboard.nextLine();
+   
+   System.out.println("내용 : ");
+   String text = keyboard.nextLine();
+   
+  int a = 0;
+   System.out.printf("번호 : %d\n", number);
+   System.out.printf("내용 : %s\n", text);
+   System.out.printf("작성일 : %1$tY-%1$tm-%1$td\n", today);
+   System.out.printf("조회수: %d\n", a);
 
-    public static void main(String[] args) {
-        System.out.println(new App3().getGreeting());
-        /* 
-       printf()는 지시자를 통해 변수의 값을 여러 가지 형식으로 변환하여 출력할 수 있다.
-       System.out.printf("출력 서식",출력할 내용);
-        출력 후 줄바꿈을 하지 않는다. 줄바꿈을 하려면 지시자 '%n'을 넣어줘야 한다.
-        출력하려는 값의 수만큼 지시자도 사용해야 한다.
-        출력될 값과 지시자의 순서는 일치해야 한다.
-         지시자를 제외한 문자는 입력한 그대로 출력된다.
-       %d - 정수를 출력
-       %s - 문자열을 출력 
-        **/
-        System.out.printf("글자쓰고: %d\n", 1);
-        System.out.printf("내용: %s\n", "게시글입니다.");
-        
-        
-       
 
+   
+  
     }
 }

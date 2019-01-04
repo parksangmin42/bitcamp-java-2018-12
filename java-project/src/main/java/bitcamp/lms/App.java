@@ -4,17 +4,42 @@
 package bitcamp.lms;
 
 public class App {
-    public String getGreeting() {
-        return "번호:1\n"
-            + "수업명: 자바 프로젝트 실습\n"
-            + "설명: 자바 프로젝트를 통한 자바 언어 활용법 익히기\n"
-            + "시작일: 2019-01-02\n"
-            + "종료일: 2019-05-28\n"
-            + "총수업시간: 1000시간\n"
-            + "일수업시간: 8시간\n";
-    }
-
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+       java.util.Scanner keyboard = new java.util.Scanner(System.in);
+       
+       System.out.print("번호? ");
+       int a = keyboard.nextInt();   
+    
+       keyboard.nextLine();
+
+       System.out.print("수업명? ");
+       String b = keyboard.nextLine();
+       
+       System.out.println("수업내용? ");
+       String c = keyboard.nextLine();
+       
+       System.out.println("시작일: ");
+       String d = keyboard.nextLine();
+       
+       System.out.println("종료일: ");
+       String e = keyboard.nextLine();
+       
+       System.out.println("총수업시간: ");
+       String f = keyboard.nextLine();
+       
+       System.out.println("일수업시간: ");
+       int g = keyboard.nextInt();
+       
+       keyboard.nextLine();
+       
+       
+       System.out.printf("번호: %d\n", a);
+       System.out.printf("수업명? %s\n", b);
+       System.out.printf("수업내용? %s\n", c);
+       System.out.printf("기간: %s ~ %s\n", d, e );
+       System.out.printf("총수업시간: %s시간\n", f);
+       System.out.printf("일수업시간: %d시간\n", g);
+
+
     }
 }
