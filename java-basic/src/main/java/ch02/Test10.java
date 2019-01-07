@@ -9,7 +9,7 @@ public class Test10 {
     System.out.println("Hello,\tworld!");
     System.out.println("Hello,\fworld!");
     System.out.println("Hello,\"w\"orld!");
-    System.out.println("Hello,\'w'orld!");
+    System.out.println("Hello,'w'orld!");
     System.out.println('\'');
     System.out.println('"');
     System.out.println("Hello,\\\\\\world!");

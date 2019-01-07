@@ -21,6 +21,8 @@ public class App3 {
    System.out.printf("내용 : %s\n", text);
    System.out.printf("작성일 : %1$tY-%1$tm-%1$td\n", today);
    System.out.printf("조회수: %d\n", a);
+   
+   keyboard.close();
 
 
    

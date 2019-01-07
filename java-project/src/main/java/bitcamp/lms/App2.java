@@ -38,6 +38,8 @@ public class App2 {
       System.out.printf("사진 : %s\n", pic);
       System.out.printf("전화 : %s\n", phon);
       System.out.printf("가입일 : %1$tY-%1$tm-%1$td\n", today );
+      
+      keyboard.close();
 
 
 
