@@ -1,4 +1,4 @@
-// 논리 연산자: &&, ||, ^,!
+// 논리 연산자: &&, ||, ^, !
 package ch04;
 
 public class Test10 {

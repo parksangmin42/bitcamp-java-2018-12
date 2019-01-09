@@ -1,4 +1,4 @@
-// 메서드 - 메서드의 리턴 
+// 메서드 - 메서드의 리턴 값
 package ch06;
 
 public class Test03 {
@@ -10,26 +10,35 @@ public class Test03 {
     int i;
     //i = m1(); // 컴파일 오류! 리턴 값의 타입과 변수의 타입이 맞지 않다.
     String s;
-    s = m1(); //ok
+    s = m1(); // OK!
     System.out.println(s);
     
-    i = m2();
+    i = m2(); // OK!
     System.out.println(i);
     
-    // 리턴 값을 사용할 일이 없다면 메서드 호풀할 때 받지 않아도 된다.
+    // 리턴 값을 사용할 일이 없다면 메서드 호출할 때 받지 않아도 된다.
     m1();
     m2();
   }
   
   static String m1() {
-    // 메서드를 실행한 후 호출자에게 값을 리턴하려면
+    // 메서드를 실행한 후 호출자에게 값을 리턴하려면 
     return "홍길동";
-    }
+  }
   
   static int m2() {
     return 100;
   }
 }
+
+
+
+
+
+
+
+
+
 
 
 
