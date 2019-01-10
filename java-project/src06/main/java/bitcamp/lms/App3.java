@@ -3,8 +3,6 @@
  */
 package bitcamp.lms;
 
-import bitcamp.lms.Board;
-
 public class App3 {
   public static void main (String[]agr) {
     
@@ -12,38 +10,37 @@ public class App3 {
     java.util.Scanner keyboard = new java.util.Scanner(System.in);
     java.util.Date today = new java.util.Date();
     
-    final int LENGTH = 10;
-    Board[] bor = new Board[LENGTH];
-    
-    int i = 0;
-    while (i < LENGTH) {
-      
-      Board bor1 = new Board();
+    int[] number = new int[5];
+    String[] what = new String[5];
+
+
+    int index = 0;
+    while (index < 5) {
       
       System.out.print("번호?");
-      bor1.number = keyboard.nextInt();
+      number[index] = keyboard.nextInt();
       keyboard.nextLine();
 
       System.out.print("내용?");
-      bor1.what = keyboard.nextLine();
+      what[index] = keyboard.nextLine();
 
       
-      bor[i] = bor1;
-      i++;
+      
+      index++;
 
       System.out.println("계속 입력하시겠습니까?(Y/n)");
       String re = keyboard.nextLine();
       if (!re.equalsIgnoreCase("y") && !re.equals(""))
         break;
       
+     
     }
-    
     int count = 0;
     keyboard.close();
     
     
-    for (int c = 0; c < i; c++) {
-      System.out.printf("%d, %s, %3$tY-%3$tm-%3$td, %4$d\n", bor[c].number, bor[c].what, today, 
+    for (int c = 0; c < index; c++) {
+      System.out.printf("%d, %s, %3$tY-%3$tm-%3$td, %4$d\n", number[c], what[c], today, 
           count);
     }
     
