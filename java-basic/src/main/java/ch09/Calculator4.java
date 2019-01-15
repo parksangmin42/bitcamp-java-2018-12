@@ -5,7 +5,7 @@ public class Calculator4 {
   int result = 0; 
      
   // 인스턴스 주소를 파라미터로 받지 않고 호출될 때 앞에서 받는 방법!
-  void plus(Calculator4 this, int a) {
+  void plus(int a) {
     // 메서드를 호출할 때 인스턴스 주소를 앞으로 넘겼다.
     // 예) c1.plus(2);
     // => 그럼 c1에 들어 있던 인스턴스 주소가 plus에 전달되었다는 것인데,
