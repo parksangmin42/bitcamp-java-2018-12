@@ -1,63 +1,73 @@
 package com.eomcs.lms;
 
-import java.sql.Date;
 import java.util.Scanner;
-import com.eomcs.lms.Lesson;
+import com.eomcs.lms.handler.BoardHandler;
+import com.eomcs.lms.handler.LessonHandler;
+import com.eomcs.lms.handler.MemberHandler;
 
 public class App {
 
+  static Scanner keyboard = new Scanner(System.in);
+
   public static void main(String[] args) {
     
-    Scanner keyboard = new Scanner(System.in);
+    LessonHandler lessonHandler = new LessonHandler(keyboard);
+    MemberHandler memberHandler = new MemberHandler(keyboard);
+    BoardHandler boardHandler1 = new BoardHandler(keyboard);
+    BoardHandler boardHandler2 = new BoardHandler(keyboard);
+    
+    while (true) {
+      String command = prompt();
 
-    final int LENGTH = 10;
-    
-    
-    int i = 0;
-    while (i < LENGTH) {
-      System.out.print("번호? ");
-      int a = Integer.parseInt(keyboard.nextLine());
-      no[i] = a;
-      System.out.print("수업명? ");
-      title[i] = keyboard.nextLine();
+      if (command.equals("/lesson/add")) {
+        lessonHandler.addLesson();
+        
+      } else if (command.equals("/lesson/list")) {
+        lessonHandler.listLesson();
       
-      System.out.print("설명? ");
-      contents[i] = keyboard.nextLine();
+      } else if (command.equals("/lesson/detail")) {
+        lessonHandler.detailLesson();
       
-      System.out.print("시작일? ");
-      startDate[i] = Date.valueOf(keyboard.nextLine());
+      } else if (command.equals("/lesson/delete")) {
+        lessonHandler.deleteLesson();
       
-      System.out.print("종료일? ");
-      endDate[i] = Date.valueOf(keyboard.nextLine());
+      } else if (command.equals("/lesson/update")) {
+        lessonHandler.updateLesson();
       
-      System.out.print("총수업시간? ");
-      totalHours[i] = Integer.parseInt(keyboard.nextLine());
-      
-      System.out.print("일수업시간? ");
-      dayHours[i] = Integer.parseInt(keyboard.nextLine());
-      
-      i++; // 배열의 인덱스를 증가시킨다.
-      
-      // 사용자가 입력한 값을 소문자로 변환한다.
-      System.out.print("\n계속 입력하시겠습니까?(Y/n) ");
-      String answer = keyboard.nextLine().toLowerCase();
-      
-      // 입력 값이 "Y", "y", "" 이 아니면, 입력을 종료한다. 
-      if (!answer.equals("y") && answer.length() > 0) {
+      } else if (command.equals("/member/add")) {
+        memberHandler.addMember();
+        
+      } else if (command.equals("/member/list")) {
+        memberHandler.listMember();
+        
+      } else if (command.equals("/board/add")) {
+        boardHandler1.addBoard();
+        
+      } else if (command.equals("/board/list")) {
+        boardHandler1.listBoard();
+        
+      } else if (command.equals("/board2/add")) {
+        boardHandler2.addBoard();
+        
+      } else if (command.equals("/board2/list")) {
+        boardHandler2.listBoard();
+        
+      } else if (command.equals("quit")) {
+        System.out.println("안녕!");
         break;
+        
+      } else {
+        System.out.println("실행할 수 없는 명령입니다.");
       }
+      
+      System.out.println(); // 결과 출력 후 빈 줄 출력
+    }
 
-      System.out.println();
-    }
-    
     keyboard.close();
-    
-    System.out.println(); // 빈 줄 출력
-    
-    // 배열에 입력한 개수만큼 출력한다.
-    for (int j = 0; j < i; j++) {
-      System.out.printf("%3d, %-15s, %10s ~ %10s, %4d\n", 
-          no[j], title[j], startDate[j], endDate[j], totalHours[j]);
-    }
+  }
+
+  private static String prompt() {
+    System.out.print("명령> ");
+    return keyboard.nextLine().toLowerCase();
   }
 }
