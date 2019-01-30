@@ -1,7 +1,7 @@
 package com.eomcs.lms.domain;
 import java.sql.Date;
 
-public class Member {
+public class Member implements Cloneable {
   private int no;
   private String name;
   private String email;
@@ -9,6 +9,11 @@ public class Member {
   private String photo;
   private String tel;
   private Date registeredDate;
+  
+  @Override
+  public Member clone() throws CloneNotSupportedException {
+    return (Member) super.clone();
+  }
   
   public int getNo() {
     return no;
@@ -51,6 +56,22 @@ public class Member {
   }
   public void setRegisteredDate(Date registeredDate) {
     this.registeredDate = registeredDate;
+  }
+
+  public static Member valueOf(String nextLine) {
+    
+    String[] values = nextLine.split(",");
+        
+        Member member = new Member();
+        member.setNo(Integer.parseInt(values[0]));
+        member.setName(values[1]);
+        member.setEmail(values[2]);
+        member.setPassword(values[3]);
+        member.setPhoto(values[4]);
+        member.setTel(values[5]);
+        member.setRegisteredDate(Date.valueOf(values[6]));
+        
+    return member;
   }
   
   
