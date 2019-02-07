@@ -1,6 +1,7 @@
 package design_pattern.decorator.before;
 
-public class Hybrid extends Sedan {
+public class Hybrid extends Car {
+  
   @Override
   public void run() {
     if (this.speed <= 60) {

@@ -28,5 +28,5 @@ public class SunRoof extends Decorator {
   public void closeSunRoof() {
     this.openSunRoof = false;
   }
-  
+ 
 }

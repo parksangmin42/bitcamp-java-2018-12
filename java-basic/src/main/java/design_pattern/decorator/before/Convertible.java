@@ -1,13 +1,13 @@
 package design_pattern.decorator.before;
 
-public class Convertible extends Sedan{
-
+public class Convertible extends Sedan {
+  
   boolean openRoof;
-
+  
   public void open(boolean open) {
     this.openRoof = open;
   }
-
+  
   public void run2() {
     if (openRoof) {
       System.out.println("뚜껑 연다.");

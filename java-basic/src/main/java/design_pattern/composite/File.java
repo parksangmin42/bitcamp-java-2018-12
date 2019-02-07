@@ -3,7 +3,7 @@ package design_pattern.composite;
 public class File extends Node {
   
   String type;
-  int length; 
+  int length;
   
   public File(String title, String type, int length) {
     this.title = title;
@@ -17,4 +17,11 @@ public class File extends Node {
     System.out.printf("타입: %s\n", this.type);
     System.out.printf("크기: %d\n", this.length);
   }
+  
 }
+
+
+
+
+
+

@@ -6,5 +6,5 @@ public class HybridTruck extends Hybrid {
     this.stop();
     System.out.println("짐을 내린다.");
     this.run();
-  }  
+  }
 }
