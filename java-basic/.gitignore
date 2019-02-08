@@ -5,7 +5,7 @@ node_modules/
 .settings/
 bin/
 build/
-temp/
+temp2/
 Debug/
 Release/
 
