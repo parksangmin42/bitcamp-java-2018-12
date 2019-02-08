@@ -16,7 +16,7 @@ public class Client2 {
     keyboard.nextLine(); // 사용자가 엔터를 칠 때까지 다음 코드로 이동하지 않는다.
     
     socket.close();
-    System.out.println("서보와의 연결을 끊었음.");
+    System.out.println("서버와의 연결을 끊었음.");
     // 대기열의 크기에 따라 연결되는 클라이언트 수의 제한을 확인하기 위해 
     // 여러 개의 클라이언트를 실행하라!
     
