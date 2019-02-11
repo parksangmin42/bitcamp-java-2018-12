@@ -16,32 +16,32 @@ public class Server3 {
   public static void main(String[] args) {
     try (Scanner keyboard = new Scanner(System.in);
         ServerSocket serverSocket = new ServerSocket(8888)) {
-
+      
       System.out.println("클라이언트의 연결을 기다리고 있음.");
-
+      
       try (
-          Socket socket = serverSocket.accept();
-          PrintWriter out = new PrintWriter(socket.getOutputStream());
-          DataInputStream in =new DataInputStream(
-              new BufferedInputStream(socket.getInputStream()))) {
-
+        Socket socket = serverSocket.accept();
+        PrintWriter out = new PrintWriter(socket.getOutputStream());
+        DataInputStream in = new DataInputStream( 
+            new BufferedInputStream(socket.getInputStream()))) {
+        
         System.out.println("클라이언트가 연결되었음.");
-
+        
         // 클라이언트가 보낼 데이터의 크기를 먼저 읽는다.
-        long fileLen = in.readLong();
-        System.out.printf("보내는 파일의 크기: %d byte\n", fileLen);
-
+        long fileLen = in.readLong(); 
+        System.out.printf("받는 파일의 크기: %d byte\n", fileLen);
+        
         // 클라이언트가 보내는 파일의 이름
         String filename = in.readUTF();
-        System.out.printf("보내는 파일의 이름: &s\n", filename);
-
+        System.out.printf("받는 파일의 이름: %s\n", filename);
+        
         // 클라이언트가 보내는 데이터를 서버쪽 폴더에 저장한다.
-        File file = new File("temp2/download/" + filename);
-
+        File file = new File("temp/download/" + filename);
+        
         // 클라이언트가 보낸 데이터를 읽어서 출력한다.
-        try (BufferedOutputStream fileOut = new BufferedOutputStream(
-            new FileOutputStream(file))) {
-
+        try (BufferedOutputStream fileOut = new BufferedOutputStream( 
+              new FileOutputStream(file))) {
+          
           System.out.println("파일을 받는 중...");
           for (long i = 0; i < fileLen; i++) {
             fileOut.write(in.read()); // 소켓에서 읽은 바이트를 버퍼에 저장한다.
@@ -54,12 +54,13 @@ public class Server3 {
           out.println("success");
           out.flush();
           
-        } catch (Exception e) {
+        } catch (Exception e){
           out.println("fail");
           out.flush();
+          e.printStackTrace();
         }
         System.out.println("클라인트에게 응답했음.");
-      }
+      } 
       System.out.println("클라이언트와의 연결을 끊었음.");
     } catch (Exception e) {
       e.printStackTrace();
@@ -68,22 +69,3 @@ public class Server3 {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
