@@ -1,16 +1,11 @@
+// 15단계: 여러 클라이언트 요청을 처리할 때의 문제점과 해결책(멀티 스레드 적용)
 package com.eomcs.lms;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.Stack;
-import com.eomcs.context.ApplicationContextListener;
-import com.eomcs.lms.domain.Board;
-import com.eomcs.lms.domain.Lesson;
-import com.eomcs.lms.domain.Member;
 import com.eomcs.lms.handler.BoardAddCommand;
 import com.eomcs.lms.handler.BoardDeleteCommand;
 import com.eomcs.lms.handler.BoardDetailCommand;
@@ -27,107 +22,96 @@ import com.eomcs.lms.handler.MemberDeleteCommand;
 import com.eomcs.lms.handler.MemberDetailCommand;
 import com.eomcs.lms.handler.MemberListCommand;
 import com.eomcs.lms.handler.MemberUpdateCommand;
+import com.eomcs.lms.proxy.BoardDaoProxy;
+import com.eomcs.lms.proxy.LessonDaoProxy;
+import com.eomcs.lms.proxy.MemberDaoProxy;
 
 public class App {
-  
-  // Observer를 보관할 저장소
-  ArrayList<ApplicationContextListener> applicationContextListeners = new ArrayList<>();
 
-  // Observer와 서로 공유할 값을 저장하는 보관소
-  Map<String,Object> context = new HashMap<>();
-  
   Scanner keyboard = new Scanner(System.in);
   Stack<String> commandHistory = new Stack<>();
   Queue<String> commandHistory2 = new LinkedList<>();
-  
-  @SuppressWarnings("unchecked")
+
   public void service() {
-    
-    // 서비스를 실행하기 전에 등록된 모든 Observer를 호출하여 시작을 알린다.
-    for (ApplicationContextListener listener : applicationContextListeners) {
-      listener.contextInitialized(context);
-    }
-    
+
     Map<String,Command> commandMap = new HashMap<>();
 
-    // 핸들러가 사용할 데이터는 context에서 꺼내 준다.
-    List<Lesson> lessonList = (List<Lesson>) context.get("lessonList");
-    commandMap.put("/lesson/add", new LessonAddCommand(keyboard, lessonList));
-    commandMap.put("/lesson/list", new LessonListCommand(keyboard, lessonList));
-    commandMap.put("/lesson/detail", new LessonDetailCommand(keyboard, lessonList));
-    commandMap.put("/lesson/update", new LessonUpdateCommand(keyboard, lessonList));
-    commandMap.put("/lesson/delete", new LessonDeleteCommand(keyboard, lessonList));
+    LessonDaoProxy lessonAgent = new LessonDaoProxy("192.168.0.26", 8888, "/lesson");
+    commandMap.put("/lesson/add", new LessonAddCommand(keyboard, lessonAgent));
+    commandMap.put("/lesson/list", new LessonListCommand(keyboard, lessonAgent));
+    commandMap.put("/lesson/detail", new LessonDetailCommand(keyboard, lessonAgent));
+    commandMap.put("/lesson/update", new LessonUpdateCommand(keyboard, lessonAgent));
+    commandMap.put("/lesson/delete", new LessonDeleteCommand(keyboard, lessonAgent));
 
-    List<Member> memberList = (List<Member>) context.get("memberList");
-    commandMap.put("/member/add", new MemberAddCommand(keyboard, memberList));
-    commandMap.put("/member/list", new MemberListCommand(keyboard, memberList));
-    commandMap.put("/member/detail", new MemberDetailCommand(keyboard, memberList));
-    commandMap.put("/member/update", new MemberUpdateCommand(keyboard, memberList));
-    commandMap.put("/member/delete", new MemberDeleteCommand(keyboard, memberList));
-    
-    List<Board> boardList = (List<Board>) context.get("boardList");
-    commandMap.put("/board/add", new BoardAddCommand(keyboard, boardList));
-    commandMap.put("/board/list", new BoardListCommand(keyboard, boardList));
-    commandMap.put("/board/detail", new BoardDetailCommand(keyboard, boardList));
-    commandMap.put("/board/update", new BoardUpdateCommand(keyboard, boardList));
-    commandMap.put("/board/delete", new BoardDeleteCommand(keyboard, boardList));
-    
+    MemberDaoProxy memberAgent = new MemberDaoProxy("192.168.0.26", 8888, "/member");
+    commandMap.put("/member/add", new MemberAddCommand(keyboard, memberAgent));
+    commandMap.put("/member/list", new MemberListCommand(keyboard, memberAgent));
+    commandMap.put("/member/detail", new MemberDetailCommand(keyboard, memberAgent));
+    commandMap.put("/member/update", new MemberUpdateCommand(keyboard, memberAgent));
+    commandMap.put("/member/delete", new MemberDeleteCommand(keyboard, memberAgent));
+
+    BoardDaoProxy boardAgent = new BoardDaoProxy("192.168.0.26", 8888, "/board");
+    commandMap.put("/board/add", new BoardAddCommand(keyboard, boardAgent));
+    commandMap.put("/board/list", new BoardListCommand(keyboard, boardAgent));
+    commandMap.put("/board/detail", new BoardDetailCommand(keyboard, boardAgent));
+    commandMap.put("/board/update", new BoardUpdateCommand(keyboard, boardAgent));
+    commandMap.put("/board/delete", new BoardDeleteCommand(keyboard, boardAgent));
+
     while (true) {
       String command = prompt();
-
-      // 사용자가 입력한 명령을 스택에 보관한다.
+      
       commandHistory.push(command);
-      
-      // 사용자가 입력한 명령을 큐에 보관한다.
       commandHistory2.offer(command);
-      
-      // 사용자가 입력한 명령으로 Command 객체를 찾는다.
-      Command commandHandler = commandMap.get(command);
-      
-      if (commandHandler != null) {
-        try {
-          commandHandler.execute();
-        } catch (Exception e) {
-          System.out.println("명령어 실행 중 오류 발생 : " + e.toString());
-        }
-      } else if (command.equals("quit")) {
-        System.out.println("안녕!");
+
+      if (command.equals("quit")) {
+        System.out.println("종료합니다.");
         break;
         
       } else if (command.equals("history")) {
         printCommandHistory();
+        continue;
         
       } else if (command.equals("history2")) {
         printCommandHistory2();
-        
-      } else {
+        continue;
+      } 
+      
+      // 사용자가 입력한 명령으로 Command 객체를 찾는다.
+      Command commandHandler = commandMap.get(command);
+      if (commandHandler == null) {
         System.out.println("실행할 수 없는 명령입니다.");
+        continue;
       }
       
-      System.out.println(); 
-    }
+      // stateful을 stateless로 전환할 때 주의할 점!
+      // => 가능한 서버에 요청하는 시점에 서버와 연결하라!
+      // => 이 클래스에서 서버와 연결하지 않고 
+      //    데이터를 요청하는 일을 하는 객체(*Agent)에 서버 연결을 맡긴다. 
+      try {
+        commandHandler.execute();
+        System.out.println(); 
 
-    keyboard.close();
-    
-    // 서비스를 종료하기 전에 등록된 모든 Observer를 호출하여 종료를 알린다.
-    for (ApplicationContextListener listener : applicationContextListeners) {
-      listener.contextDestroyed(context);
+      } catch (Exception e) {
+        System.out.println("명령어 실행 중 오류 발생 : " + e.toString());
+      }
     }
+    
+    keyboard.close();
   }
   
   @SuppressWarnings("unchecked")
   private void printCommandHistory() {
     Stack<String> temp = (Stack<String>) commandHistory.clone();
-    
+
     while (temp.size() > 0) {
       System.out.println(temp.pop());
     }
   }
-  
+
   @SuppressWarnings("unchecked")
   private void printCommandHistory2() {
     Queue<String> temp = (Queue<String>) ((LinkedList<String>) commandHistory2).clone();
-    
+
     while (temp.size() > 0) {
       System.out.println(temp.poll());
     }
@@ -137,18 +121,10 @@ public class App {
     System.out.print("명령> ");
     return keyboard.nextLine().toLowerCase();
   }
-  
-  // Observer를 등록하는 메서드
-  private void addApplicationContextListener(ApplicationContextListener listener) {
-    applicationContextListeners.add(listener);
-  }
-  
+
   public static void main(String[] args) {
     App app = new App();
-    
-    // App 객체에 Observer를 등록한다.
-    app.addApplicationContextListener(new DataLoaderListener());
-    
+
     // App 을 실행한다.
     app.service();
   }

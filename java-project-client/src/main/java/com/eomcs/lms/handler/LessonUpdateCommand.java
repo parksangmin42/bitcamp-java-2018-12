@@ -1,34 +1,28 @@
 package com.eomcs.lms.handler;
 import java.sql.Date;
-import java.util.List;
 import java.util.Scanner;
 import com.eomcs.lms.domain.Lesson;
+import com.eomcs.lms.proxy.LessonDaoProxy;
 
 public class LessonUpdateCommand implements Command {
 
   Scanner keyboard;
-  List<Lesson> list;
-
-  public LessonUpdateCommand(Scanner keyboard, List<Lesson> list) {
+  LessonDaoProxy lessonDao;
+  
+  public LessonUpdateCommand(Scanner keyboard, LessonDaoProxy lessonDao) {
     this.keyboard = keyboard;
-    this.list = list;
+    this.lessonDao = lessonDao;
   }
+  
 
   @Override
   public void execute() {
     System.out.print("번호? ");
     int no = Integer.parseInt(keyboard.nextLine());
 
-    int index = indexOfLesson(no);
-    if (index == -1) {
-      System.out.println("해당 수업을 찾을 수 없습니다.");
-      return;
-    }
-    
-    Lesson lesson = list.get(index);
-    
     try {
-      // 일단 기존 값을 복제한다.
+      Lesson lesson = lessonDao.findByNo(no);
+    
       Lesson temp = lesson.clone();
       
       System.out.printf("수업명(%s)? ", lesson.getTitle());
@@ -56,21 +50,11 @@ public class LessonUpdateCommand implements Command {
       if ((input = keyboard.nextLine()).length() > 0)
         temp.setDayHours(Integer.parseInt(input));
       
-      list.set(index, temp);
-      
-      System.out.println("수업을 변경했습니다.");
+      lessonDao.update(temp);
+      System.out.println("변경했습니다.");
       
     } catch (Exception e) {
-      System.out.println("변경 중 오류 발생!");
+      System.out.printf("실행 오류! : %s\n", e.getMessage());
     }
-  }
-  
-  private int indexOfLesson(int no) {
-    for (int i = 0; i < list.size(); i++) {
-      Lesson l = list.get(i);
-      if (l.getNo() == no)
-        return i;
-    }
-    return -1;
   }
 }

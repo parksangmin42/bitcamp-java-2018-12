@@ -1,16 +1,16 @@
 package com.eomcs.lms.handler;
-import java.util.List;
 import java.util.Scanner;
 import com.eomcs.lms.domain.Member;
+import com.eomcs.lms.proxy.MemberDaoProxy;
 
 public class MemberUpdateCommand implements Command {
   
   Scanner keyboard;
-  List<Member> list;
+  MemberDaoProxy memberDao;
   
-  public MemberUpdateCommand(Scanner keyboard, List<Member> list) {
+  public MemberUpdateCommand(Scanner keyboard, MemberDaoProxy memberDao) {
     this.keyboard = keyboard;
-    this.list = list;
+    this.memberDao = memberDao;
   }
   
   @Override
@@ -18,16 +18,9 @@ public class MemberUpdateCommand implements Command {
     System.out.print("번호? ");
     int no = Integer.parseInt(keyboard.nextLine());
 
-    int index = indexOfMember(no);
-    if (index == -1) {
-      System.out.println("해당 회원을 찾을 수 없습니다.");
-      return;
-    }
-    
-    Member member = list.get(index);
-    
     try {
-      // 기존 값 복제
+      Member member = memberDao.findByNo(no);
+    
       Member temp = member.clone();
       
       System.out.printf("이름(%s)? ", member.getName());
@@ -51,21 +44,11 @@ public class MemberUpdateCommand implements Command {
       if ((input = keyboard.nextLine()).length() > 0)
         temp.setTel(input);
       
-      list.set(index, temp);
-      
-      System.out.println("회원을 변경했습니다.");
+      memberDao.update(temp);
+      System.out.println("변경했습니다.");
       
     } catch (Exception e) {
-      System.out.println("변경 중 오류 발생!");
+      System.out.printf("실행 오류! : %s\n", e.getMessage());
     }
-  }
-  
-  private int indexOfMember(int no) {
-    for (int i = 0; i < list.size(); i++) {
-      Member m = list.get(i);
-      if (m.getNo() == no)
-        return i;
-    }
-    return -1;
   }
 }
