@@ -4,33 +4,30 @@ import com.eomcs.lms.dao.BoardDao;
 import com.eomcs.lms.domain.Board;
 
 public class BoardUpdateCommand implements Command {
-  
+
   Scanner keyboard;
   BoardDao boardDao;
-  
+
   public BoardUpdateCommand(Scanner keyboard, BoardDao boardDao) {
     this.keyboard = keyboard;
     this.boardDao = boardDao;
   }
-  
+
   @Override
   public void execute() {
-    System.out.print("번호? ");
-    int no = Integer.parseInt(keyboard.nextLine());
 
     try {
-      Board board = boardDao.findByNo(no);
-    
-      // 기존 값 복제
-      Board temp = board.clone();
-      
+      System.out.print("번호? ");
+      Board board = new Board();
+      board.setNo(Integer.parseInt(keyboard.nextLine()));
+
       System.out.printf("내용? ");
-      String input = keyboard.nextLine();
-      if (input.length() > 0) 
-        temp.setContents(input);
-      
-      boardDao.update(temp);
-      
+      board.setContents(keyboard.nextLine());
+
+      if (boardDao.update(board) == 0) {
+        System.out.println("해당 번호의 게시물이 없습니다.");
+        return;
+      }
       System.out.println("변경했습니다.");
       
     } catch (Exception e) {

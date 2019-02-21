@@ -8,7 +8,6 @@ public class Test02 {
     // 자바의 스레드는 특정 그룹에 소속된다.
     // "main" 스레드의 그룹은?
     //
-    
     Thread currThread = Thread.currentThread();
     ThreadGroup group = currThread.getThreadGroup();
     
@@ -18,11 +17,6 @@ public class Test02 {
 
 }
 
-/*
-JVM의 스레드 계층도:
-main(TG)
-    => main(T)
-
-
-
-*/
+// JVM의 스레드 계층도:
+// main(TG)
+//   => main(T)

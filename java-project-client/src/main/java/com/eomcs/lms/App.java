@@ -1,11 +1,19 @@
-// 15단계: 여러 클라이언트 요청을 처리할 때의 문제점과 해결책(멀티 스레드 적용)
+// 17단계: Connection 객체 공유하기
+// => SQL을 실행할 때마다 Connection 객체를 생성하는데,
+//     실행 속도도 높이고 커넥션 객체가 가비지가 되는 것도 줄이기 위해 
+//     커넥션 객체를 생성하여 공유한다.
 package com.eomcs.lms;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.Stack;
+import com.eomcs.lms.dao.mariadb.BoardDaoImpl;
+import com.eomcs.lms.dao.mariadb.LessonDaoImpl;
+import com.eomcs.lms.dao.mariadb.MemberDaoImpl;
 import com.eomcs.lms.handler.BoardAddCommand;
 import com.eomcs.lms.handler.BoardDeleteCommand;
 import com.eomcs.lms.handler.BoardDetailCommand;
@@ -22,9 +30,6 @@ import com.eomcs.lms.handler.MemberDeleteCommand;
 import com.eomcs.lms.handler.MemberDetailCommand;
 import com.eomcs.lms.handler.MemberListCommand;
 import com.eomcs.lms.handler.MemberUpdateCommand;
-import com.eomcs.lms.proxy.BoardDaoProxy;
-import com.eomcs.lms.proxy.LessonDaoProxy;
-import com.eomcs.lms.proxy.MemberDaoProxy;
 
 public class App {
 
@@ -32,25 +37,29 @@ public class App {
   Stack<String> commandHistory = new Stack<>();
   Queue<String> commandHistory2 = new LinkedList<>();
 
-  public void service() {
+  public void service() throws Exception {
 
+    // Dao가 사용할 커넥션 객체를 여기서 준비한다.
+    Connection con = DriverManager.getConnection(
+        "jdbc:mariadb://localhost/bitcampdb?user=bitcamp&password=1111");
+    
     Map<String,Command> commandMap = new HashMap<>();
 
-    LessonDaoProxy lessonDao = new LessonDaoProxy("192.168.0.31", 8888, "/lesson");
+    LessonDaoImpl lessonDao = new LessonDaoImpl(con);
     commandMap.put("/lesson/add", new LessonAddCommand(keyboard, lessonDao));
     commandMap.put("/lesson/list", new LessonListCommand(keyboard, lessonDao));
     commandMap.put("/lesson/detail", new LessonDetailCommand(keyboard, lessonDao));
     commandMap.put("/lesson/update", new LessonUpdateCommand(keyboard, lessonDao));
     commandMap.put("/lesson/delete", new LessonDeleteCommand(keyboard, lessonDao));
 
-    MemberDaoProxy memberDao = new MemberDaoProxy("192.168.0.31", 8888, "/member");
+    MemberDaoImpl memberDao = new MemberDaoImpl(con);
     commandMap.put("/member/add", new MemberAddCommand(keyboard, memberDao));
     commandMap.put("/member/list", new MemberListCommand(keyboard, memberDao));
     commandMap.put("/member/detail", new MemberDetailCommand(keyboard, memberDao));
     commandMap.put("/member/update", new MemberUpdateCommand(keyboard, memberDao));
     commandMap.put("/member/delete", new MemberDeleteCommand(keyboard, memberDao));
 
-    BoardDaoProxy boardDao = new BoardDaoProxy("192.168.0.31", 8888, "/board");
+    BoardDaoImpl boardDao = new BoardDaoImpl(con);
     commandMap.put("/board/add", new BoardAddCommand(keyboard, boardDao));
     commandMap.put("/board/list", new BoardListCommand(keyboard, boardDao));
     commandMap.put("/board/detail", new BoardDetailCommand(keyboard, boardDao));
@@ -96,6 +105,7 @@ public class App {
       }
     }
     
+    con.close();
     keyboard.close();
   }
   
@@ -122,10 +132,30 @@ public class App {
     return keyboard.nextLine().toLowerCase();
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
+    
     App app = new App();
-
+    
     // App 을 실행한다.
-    app.service();
+      app.service();
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
