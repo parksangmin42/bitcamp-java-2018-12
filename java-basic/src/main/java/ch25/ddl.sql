@@ -1,6 +1,6 @@
 -- 게시판 테이블 삭제
 drop table x_board;
-  
+
 -- 게시판 테이블 생성
 create table x_board (
   board_id int not null primary key auto_increment,
