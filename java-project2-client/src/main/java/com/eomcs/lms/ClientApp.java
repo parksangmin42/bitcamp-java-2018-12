@@ -1,4 +1,8 @@
-// 2단계: '규칙2'에 맞춰 사용자의 입력을 서버에 전달한다.
+// 3단계: 명령어에 서버 주소와 포트 번호 포함하기
+//    예) localhost:8888/board/list
+// => 만약 포트 번호를 생략한다면 기본이 8888이다.
+//    예) localhost/board/list
+//    예) 192.168.0.1/board/list
 // 
 package com.eomcs.lms;
 import java.io.BufferedReader;
@@ -19,33 +23,48 @@ public class ClientApp {
   public void service() throws Exception {
 
     while (true) {
-      String command = prompt();
-      if (command.equals("quit")) {
+      String input = prompt();
+      
+      if (input.equals("quit")) {
         System.out.println("클라이언트를 종료합니다.");
         return;
       } 
-
-      commandHistory.push(command);
-      commandHistory2.offer(command);
-
-      if (command.equals("history")) {
+      
+      commandHistory.push(input);
+      commandHistory2.offer(input);
+      
+      if (input.equals("history")) {
         printCommandHistory();
         continue;
-      } else if (command.equals("history2")) {
+      } else if (input.equals("history2")) {
         printCommandHistory2();
         continue;
       } 
+      
+      int index = input.indexOf("/"); // 예) localhost:8888/board/list
+      
+      // 사용자가 입력한 문자열에 host 주소와 port 번호를 분리한다.
+      String[] values = input.substring(0, index).split(":");
+      String host = values[0];
+      int port = 8888;
+      if (values.length > 1) {
+        port = Integer.parseInt(values[1]);
+      }
+      
+      // 사용자가 입력한 문자열에서 명령어를 분리한다.
+      String command = input.substring(index);
+      
 
-      try (Socket socket = new Socket("localhost", 8888);
+      try (Socket socket = new Socket(host, port);
           PrintWriter out = new PrintWriter(socket.getOutputStream());
           BufferedReader in = new BufferedReader(
               new InputStreamReader(socket.getInputStream()))) {
-
+        
         // 서버에게 요청을 보낸다.
         out.println(command);
         out.flush();
-
-        if (command.equals("stop")) {
+        
+        if (command.equals("/stop")) {
           System.out.println("서버를 종료합니다.");
           break;
         } 
@@ -53,19 +72,19 @@ public class ClientApp {
         // 서버의 응답을 출력한다.
         while (true) {
           String response = in.readLine();
-
+          
           if (response.equalsIgnoreCase("!end!")) {
             break;
-
+            
           } else if (response.equals("!{}!")) {
-            String input = keyboard.nextLine();
-            out.println(input);
+            String value = keyboard.nextLine();
+            out.println(value);
             out.flush();
-
+            
           } else {
             System.out.println(response);
           }
-        } // while
+        }
       } catch (Exception e) {
         System.out.println("서버에 요청하는 중 오류 발생!");
         e.printStackTrace();

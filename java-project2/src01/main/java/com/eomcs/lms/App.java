@@ -1,4 +1,4 @@
-// 16단계: DAO에 JDBC 적용하기
+// 1단계: DAO에 JDBC 적용하기
 // => 현재 프로젝트에 mariadb JDBC 드라이버를 추가한다.
 // => 수업(Lesson), 회원(Member), 게시물(Board) 정보를 저장할 테이블을 생성한다.
 // => BoardDaoImpl, MemberDaoImpl, LessonDaoImpl 클래스에 JDBC 를 적용한다.
