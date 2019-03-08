@@ -84,8 +84,8 @@
       f.file_path 
     from 
       lms_photo p
+      left outer join lms_lesson l on p.lesson_id = l.lesson_id
       left outer join lms_photo_file f on p.photo_id = f.photo_id
-      left outer join lms_lesson l on l.lesson_id = p.photo_id
     where 
       p.photo_id = #{value}
   </select>
