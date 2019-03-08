@@ -6,11 +6,11 @@ import com.eomcs.lms.domain.Lesson;
 public class LessonUpdateCommand extends AbstractCommand {
 
   LessonDao lessonDao;
-  
+   
   public LessonUpdateCommand(LessonDao lessonDao) {
     this.lessonDao = lessonDao;
   }
-  
+   
 
   @Override
   public void execute(Response response) throws Exception {
@@ -22,8 +22,10 @@ public class LessonUpdateCommand extends AbstractCommand {
       return;
     }
     
-    Lesson temp = lesson.clone();
+    Lesson temp = new Lesson();
     
+    // 변경할 값만 temp에 저장한다.
+    // mybatis는 필드의 값이 null이 아니거나, 숫자인 경우 0이 아니면 해당 컬럼 값을 update 한다.
     String input = response.requestString(String.format(
         "수업명(%s)?", lesson.getTitle()));
     if (input.length() > 0) 
@@ -54,8 +56,17 @@ public class LessonUpdateCommand extends AbstractCommand {
     if (input.length() > 0)
       temp.setDayHours(Integer.parseInt(input));
     
-    lessonDao.update(temp);
-     
-    response.println("변경했습니다.");
+    
+    if (temp.getTitle() != null
+        || temp.getContents() != null
+        || temp.getStartDate() != null
+        || temp.getEndDate() != null
+        || temp.getTotalHours() > 0
+        || temp.getDayHours() > 0) {
+      lessonDao.update(temp);
+      response.println("변경했습니다.");
+    } else {
+      response.println("변경 취소했습니다.");
+    }
   }
 }

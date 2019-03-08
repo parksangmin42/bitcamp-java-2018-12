@@ -29,7 +29,7 @@ public class Response {
   public int requestInt(String title) throws Exception {
     return Integer.parseInt(this.requestString(title));
   }
-  
+   
   public Date requestDate(String title) throws Exception {
     return Date.valueOf(this.requestString(title));
   }  

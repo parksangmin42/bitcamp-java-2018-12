@@ -9,7 +9,7 @@ public class BoardUpdateCommand extends AbstractCommand {
   public BoardUpdateCommand(BoardDao boardDao) {
     this.boardDao = boardDao;
   }
-  
+   
   @Override
   public void execute(Response response) throws Exception {
     Board board = new Board();

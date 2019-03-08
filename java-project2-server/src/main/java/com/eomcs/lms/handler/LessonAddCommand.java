@@ -5,7 +5,7 @@ import com.eomcs.lms.domain.Lesson;
 public class LessonAddCommand extends AbstractCommand {
 
   LessonDao lessonDao;
-  
+   
   public LessonAddCommand(LessonDao lessonDao) {
     this.lessonDao = lessonDao;
   }

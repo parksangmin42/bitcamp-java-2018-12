@@ -9,7 +9,7 @@ public class MemberUpdateCommand extends AbstractCommand {
   public MemberUpdateCommand(MemberDao memberDao) {
     this.memberDao = memberDao;
   }
-
+ 
   @Override
   public void execute(Response response) throws Exception {
     int no = response.requestInt("번호?");
@@ -20,7 +20,7 @@ public class MemberUpdateCommand extends AbstractCommand {
       return;
     }
 
-    Member temp = member.clone();
+    Member temp = new Member();
 
     String input = response.requestString(String.format(
         "이름(%s)?", member.getName()));
@@ -45,7 +45,17 @@ public class MemberUpdateCommand extends AbstractCommand {
     if (input.length() > 0)
       temp.setTel(input);
 
-    memberDao.update(temp);
+    if (temp.getName() != null
+        || temp.getEmail() != null
+        || temp.getPassword() != null
+        || temp.getPhoto() != null
+        || temp.getTel() != null
+        || temp.getPassword() != null) {
+      memberDao.update(temp);
+      response.println("변경했습니다.");
+    } else {
+      response.println("변경 취소했습니다.");
+    }
     response.println("변경했습니다.");
   }
 }
