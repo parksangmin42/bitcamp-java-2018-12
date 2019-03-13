@@ -8,16 +8,15 @@ import com.eomcs.lms.domain.PhotoFile;
 
 public class PhotoFileDaoImpl implements PhotoFileDao {
 
-  // DataSource 의존 객체 선언
+  //Mybatis 의존 객체 선언
   SqlSessionFactory sqlSessionFactory;
-  
+
   public PhotoFileDaoImpl(SqlSessionFactory sqlSessionFactory) {
     this.sqlSessionFactory = sqlSessionFactory;
   }
   
   @Override
   public List<PhotoFile> findByPhotoBoardNo(int photoBoardNo) {
-    
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       return sqlSession.selectList(
           "PhotoFileMapper.findByPhotoBoardNo", photoBoardNo);
@@ -26,21 +25,16 @@ public class PhotoFileDaoImpl implements PhotoFileDao {
 
   @Override
   public void insert(PhotoFile photoFile) {
-    
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       sqlSession.insert("PhotoFileMapper.insert", photoFile);
-      sqlSession.commit();
     }
   }
 
   @Override
   public int deleteByPhotoBoardNo(int photoBoardNo) {
-    
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      int count = sqlSession.update(
+      return sqlSession.delete(
           "PhotoFileMapper.deleteByPhotoBoardNo", photoBoardNo);
-      sqlSession.commit();
-      return count;
     }
   }
 

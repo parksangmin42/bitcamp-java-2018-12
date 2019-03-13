@@ -8,7 +8,7 @@ import com.eomcs.lms.domain.Lesson;
 
 public class LessonDaoImpl implements LessonDao {
 
-  // Mybatis 의존 객체 선언 
+  // Mybatis 의존 객체 선언
   SqlSessionFactory sqlSessionFactory;
   
   public LessonDaoImpl(SqlSessionFactory sqlSessionFactory) {
@@ -22,34 +22,26 @@ public class LessonDaoImpl implements LessonDao {
   }
 
   public void insert(Lesson lesson) {
-    
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
       sqlSession.insert("LessonMapper.insert", lesson);
-      sqlSession.commit();
-    } 
+    }
   }
 
   public Lesson findByNo(int no) {
-    
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      return sqlSession.selectOne("LessonMapper.findByAll", no);
+      return sqlSession.selectOne("LessonMapper.findByNo", no);
     }
   }
 
   public int update(Lesson lesson) {
-    
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      int count = sqlSession.update("LessonMapper.update", lesson);
-      sqlSession.commit();
-      return count;
+      return sqlSession.update("LessonMapper.update", lesson);
     }
   }
 
   public int delete(int no) {
     try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-      int cout = sqlSession.delete("LessonMapper.delete", no);
-      sqlSession.commit();
-      return cout;
+      return sqlSession.delete("LessonMapper.delete", no);
     }
   }
 }
