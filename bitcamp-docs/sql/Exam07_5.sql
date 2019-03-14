@@ -19,18 +19,18 @@ from memb cross join stnt;
          컬럼명 앞에 테이블명을 명시하여 구분하라!*/ 
 select memb.mno, name, stnt.mno, work, bank
 from memb cross join stnt;
+
 /* 예전 문법 */
 select memb.mno, name, stnt.mno, work, bank
 from memb, stnt;
 
 
-/* => 컬럼명 앞에 테이블명을 붙이면 너무 길다.select memb.mno, name, stnt.mno, work, bank
-from memb, stnt;
+/* => 컬럼명 앞에 테이블명을 붙이면 너무 길다.
          테이블에 별명을 부여하고 
-         그 별명을 사용하여 컬럼을 지정하라. 
-        as는 써도되고 안써도 된다.*/
+         그 별명을 사용하여 컬럼을 지정하라. */
 select m.mno, name, s.mno, work, bank
-from memb as m cross join stnt as s;         
+from memb m cross join stnt s;  
+
 /* 예전 문법 */
 select m.mno, name, s.mno, work, bank
 from memb m, stnt s;
@@ -67,7 +67,8 @@ from memb m join stnt s using (mno);
    이럴 경우 join ~ on 컬럼a=컬럼b 문법을 사용하여
    각 테이블의 어떤 컬럼과 값을 비교할 것인지 지정하라!*/
 select m.mno, name, s.mno, work, bank
-from memb m inner join stnt s on m.mno=s.mno;       
+from memb m inner join stnt s on m.mno=s.mno;
+
 /* inner는 생략 가능하다 */
 select m.mno, name, s.mno, work, bank
 from memb m join stnt s on m.mno=s.mno;

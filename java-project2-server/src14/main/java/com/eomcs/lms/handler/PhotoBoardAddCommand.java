@@ -57,7 +57,7 @@ public class PhotoBoardAddCommand extends AbstractCommand {
       txManager.commit();
       
     } catch (Exception e) {
-      response.println("저장 중 오류 발생.");
+      response.println("저장 중 오류가 발생.");
       txManager.rollback();
     }
   }
