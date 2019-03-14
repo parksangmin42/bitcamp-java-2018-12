@@ -1,0 +1,91 @@
+[src16] : DAO 인터페이스를 구현한 객체를 자동 생성방법
+1. DaoInvocationHandler 생성
+- 실제 DAO 작업을 수행할 InvocationHandler 구현체 생성
+
+2. ApplicationInitializer 변경
+- 기존에 DAO를 구현하는 DaoImpl 대신 Proxy.newProxyInstance()가 생성한 구현체를 사용
+
+3. 매퍼 파일 변경
+- namespace 이름을 DAO 인터페이스 이름(패키지명 포함)으로 변경
+- SQL ID는 반드시 메서드명과 일치시키기
+
+4. DaoFactory 생성
+- DAO 구현체를 생성해주는 역할 수행
+- 기존에 만들었던 DaoInvocationHandler를 DaoFactory의 inner 클래스로 전환
+
+## 1. DaoInvocationHandler 생성과 실제 작업을 구현하는 InvocationHandler 생성
+DaoInvocationHandler에서 구현체 동작방식에 대하여 정의한다.
+
+#sqlID 
+- slqID에 sql문을 동작하는 문법을 넣을 수 있도록 정의한다.
+- 처음에 매퍼 파일의 namespace+SQL ID로 매퍼파일에 저장해놓은 SQL문을 실행 시키는데
+여기서 namespace를 패키지를 포함한 인터페이스명으로 바꿔놔서 proxy 파라미터 값으로  
+생성한 구현체의 클래스명추출 / 이 추출한 구현체의 인터페이스를 추출 / 추출한 값의 getName()
+그 후 %s.%s로 뒤에 %s는 method.getName()으로 메서드명을 추출받아 하나의 SQL 호출문으로 바꾼다.
+  Ex) BoardDao를 아규먼트값으로 줬다면 BoardDao의 구현체 생성 / 클래스명 추출
+추출한 구현체의 인터페이스 추출 (BoardDao를 구현한 것이니 인터페이스는 BoardDao) 
+추출한 인터페이스의 getName()으로 결과값은 [com.eomcs.lms.BoardDao] 라는 값이 나온다.
+그 후 두번째 %s는 입력받은 메서드의 getName()해서 Command 창에서 BoardDao.insert() 했다면
+그 해당 insert 메서드의 이름을 추출해 최종 값은 [com.eomcs.lms.BoardDao.insert]라는 
+SQL문이 완성 된다.
+
+# Type을 추출해 타입별로 SQL문을 실행한다.
+- 파라미터 값으로 받은 메서드의 타입을 추출해 타입을 리턴 타입별로 해당 SQL을 실행하도록 설정한다.
+List는 타입과 List를 비교 그안에서 파라미터가 있는것과 없는것을 비교해서 SQL문을 만들고 
+insert/update/delete 는 int형으로 각각 비교한다. (src16/DaoFactory)
+
+# ApplicationInitializer 변경
+- 기존 Command 객체를 생성할때 구현체를 주입해줬다면 Proxy가 자동생성한 객체로 사용할 수 있도록
+변경해준다.
+
+# 매퍼파일 변경
+- 앞에서 말한것 처럼 인스턴스를 생성해서 SQL을 실행할때 SQL문을 파라미터로 받은 값으로 구현해야 함으로
+namespace.sqlID로 실행해야 함으로 namespace 아이디를 추출할 수 있는 com.eomcs.lms.BoardDao
+라는 인터페이스 명으로 설정 해놓는다.
+
+# DaoFactory 생성
+- 실제 구현체를 생성해주는 역할을 한다.
+하나의 메서드만 구현함으로 DaoInvocationHandler를 DaoFactory의 inner클래스로 적용 
+DaoInvocationHandler가 하나의 메서드만 사용함으로 람다 문법을 사용해서 정의한다.
+ 
+  public <T> T create(Class<T> type) {
+    return (T) Proxy.newProxyInstance(
+        type.getClassLoader(), 
+        new Class[] {type}, 
+        invocationHandler);
+  }
+
+제네릭을 사용하여 어떤 타입의 객체가 들어오든 받아서 해당 인터페이스의 구현체를 생성해준다
+첫번째 아규먼트에서는 클래스를 로딩하는 역할
+두번째 아규먼트에서는 인터페이스의 정보 즉 구현해야 할 인터페이스의 목록을 알려준다.(여러개 가능)
+세번째 아규먼트에서는 실제 작업을 수행하는 객체를 넣어준다
+- 실제 작업을 수행하는 객체는 invocationHandler 이다. 
+- 여기서는 실제 작업을 수행하는 객체는 이녀석이라고 정의만 해주고 실제 이 객체가 실행될 시기는
+command 창에서 구현체를 호출하였을 때 이녀석이 실행된다. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
