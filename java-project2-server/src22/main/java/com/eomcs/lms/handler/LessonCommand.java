@@ -4,16 +4,13 @@ import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 import com.eomcs.lms.context.RequestMapping;
 import com.eomcs.lms.dao.LessonDao;
 import com.eomcs.lms.dao.PhotoBoardDao;
 import com.eomcs.lms.dao.PhotoFileDao;
 import com.eomcs.lms.domain.Lesson;
 import com.eomcs.lms.domain.PhotoBoard;
+import com.eomcs.mybatis.TransactionManager;
 
 @Component
 public class LessonCommand {
@@ -21,13 +18,13 @@ public class LessonCommand {
   LessonDao lessonDao;
   PhotoBoardDao photoBoardDao;
   PhotoFileDao photoFileDao;
-  PlatformTransactionManager txManager;
+  TransactionManager txManager;
   
   public LessonCommand(
       LessonDao lessonDao,
       PhotoBoardDao photoBoardDao,
       PhotoFileDao photoFileDao,
-      PlatformTransactionManager txManager) {
+      TransactionManager txManager) {
     this.lessonDao = lessonDao;
     this.photoBoardDao = photoBoardDao;
     this.photoFileDao = photoFileDao;
@@ -138,15 +135,7 @@ public class LessonCommand {
   
   @RequestMapping("/lesson/delete")
   public void delete(Response response) throws Exception {
-    
-    // 트랜잭션 동작 방식을 설정한다.
-    DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-    def.setName("tx1");
-    def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-    
-    // 트랜잭션을 준비한다.
-    TransactionStatus status = txManager.getTransaction(def);
-    
+    txManager.beginTransaction();
     try {
       int no = response.requestInt("번호?");
       
@@ -164,10 +153,10 @@ public class LessonCommand {
         return;
       }
       response.println("삭제했습니다.");
-      txManager.commit(status);
+      txManager.commit();
       
     } catch (Exception e) {
-      txManager.rollback(status);
+      txManager.rollback();
       response.println("삭제 중 오류 발생.");
     }
   }
