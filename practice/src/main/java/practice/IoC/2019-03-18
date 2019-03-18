@@ -1,0 +1,202 @@
+### 오전 수업 (IoC 컨테이너의 정의, 빈 생성과 꺼내기(xml,java), 패키지를 사용하여 빈을 자동 생성하기(xml,java))
+
+## IoC 컨테이너
+- IoC container
+Inversion Of Control 컨테이너 또는 bean container라고도 부른다.
+인스턴스의 생성과 관리를 담당 / 각 객체가 의존하는 객체(dependency)를 주입한다.
+  ㄴ "의존 객체 주입(dependency injection; DI)" 또는 "DI 컨테이너"라고도 부른다.
+
+- Spring IoC container
+spring.io 사이트에서 제공하는 프레임워크
+mvnrepository.com에서 spring-context로 라이브러리 검색 후 build.gradle에 의존 라이브러리 정보추가
+
+- ApplicationContext 인터페이스
+IoC컨테이너의 사용규칙을 정의한 인터페이스 / 모든 스프링 IoC 컨테이너는 이 규칙에 따라 정의되어 있다.
+
+- ApllicationContext 구현체(implement, 인터페이스를 구현한 클래스 또는 그 클래스의 인스턴스)
+XML 파일에서 설정 정보를 읽어들이는 IoC 컨테이너
+[1] ClassPathXmlApplicationContext  : 설정 파일을 자바 CLASSPATH 경로에서 찾는다.
+[2] FileSystemXmlApplicationContext : 설정 파일을 OS 경로에서 찾는다.
+
+Java 클래스 파일의 애노테이션에서 설정 정보를 읽어 들이는 IoC 컨테이너
+[3] AnnotationConfigApplicationContext : 설정 정보를 자바 클래스에서 찾는다.
+
+## 설정 정보 찾는 법
+
+- [1] XML파일에서 자바 CLASSPATH 경로에서 찾는다.
+CLASSPATH란? JVM이 자바 클래스 파일(.class)을 로딩하기 위해 찾는 경로
+보통 JVM이 클래스 파일을 찾을 때 기본 경로는 ($JAVA_HOME/lib)를 가장 먼저 찾는다.
+그래서 설정 파일 경로를 지정할 때 자바 패키지 경로를 지정하고 패키지와 패키지 사이에는 .대신 /를 사욯해야 한다.
+ApplicationContext iocContainer = 
+    new ClassPathXmlApplicationContext("ch29/a/application-context.xml")
+이런식으로 패키지명을 포함시켜 지정해 준다.
+
+- [2] 운영체제의 파일 시스템에서 설정 파일을 찾는 IoC 컨테이너
+설정 파일 경로를 지정시 직접 파일경로를 지정해야한다.
+주의! 경로를 지정할 때 URL 형식으로 지정해야한다. / URL형식에서 파일 시스템을 가르킬 때 접두어 file:// 를 붙인다.
+ApplicationContext iocContainer = new FileSystemXmlApplicationContext( 
+    "file:///Users/eomjinyoung/git/bitcamp-java-2018-12/java-basic/bin/main/ch29/a/application-context.xml")
+이런식으로 접두어 file://를 붙인 후 전체적인 파일 경로를 지정해 준다.
+
+- [3] Java 클래스 파일의 애노테이션으로부터 설정 정보를 추출
+생성자에 설정 정보를 갖고 있는 클래스의 타입 정보를 넘겨주면 된다.
+ApplicationContext iocContainer = 
+    new AnnotationConfigApplicationContext(AppConfig.class);
+이런 식으로 해당 애노테이션 정보를 가지고 있는 클래스의 타입정보(.class)를 넘겨준다.
+
+## 빈 생성과 꺼내기
+- IoC 컨테이너에서 자동으로 객체를 생성할 때 생성할 객체를 정의하고 따로 생성하고 애노테이션을 관리할 클래스(AppConfig)를 생성
+메서드를 만들어 해당 메서드가 호출 되면 return 타입으로 생성할 객체를 만들어 그 객체를 바로 리턴하도록 만들어 준다.
+만들 때 애노테이션을 사용하여 메서드를 호출해야 하고 그 애노테이션이 바로 @Bean <- 애노테이션이다.
+
+- 3번의 애노에테이션으로부터 설정 정보를 추출 할때 넘겨주는 객체가 @Bean이 붙은 객체를 생성 리턴해주는 메서드를 관리해 주는 클래스이고
+위의 방법으로 객체를 생성하고 .getBean("(메서드이름)")으로 객체를 꺼낼 수 있다.
+HashMap과 비슷한 방법으로 key값이 매서드 이름이라고 생각하면 된다.
+이렇게 객체를 꺼내서 바로 출력한다면 해당 객체의 겟터/셋터를 사용한 toString의 값이 출력 될 것이다.
+
+- 1번의 CLASSPATH로 찾는 방법도 동일하고 넘겨주는 값을 패키지명을 포함한 해당 xml파일을 넘겨준다.
+   (XML 파일) <bean id="b1" class="ch29.a.Student"/> 의 방식으로 XML파일을 설정해 IoC 컨테이너에게 빈 생성을 요청할 수 있다.
+
+## 빈을 자동 생성하기
+- 애노테이션을 가지고 있는 클래스 타입의 정보로 빈을 자동 생성하는 방법은 헤당 클래스 애노테이션을 
+@ComponentScan(basePackages="ch29.a") 이렇게 지정해 주면 해당 패키지내에 애노테이션을 찾아 객체를 자동 생성해준다.
+여기서 꺼내는 방법은 동일하나 @Bean은 메서드 이름을 key값으로 사용했지만 @Component는 클래스명을 key 값으로 사용해서 꺼낸다.
+주의! 클래스명의 알파벳 첫글자는 소문자이고 나머지는 그대로 대소문자를 구분해줘야 한다.
+
+- CLASSPATH를 사용하여 XML 파일에서 빈을 자동 생성하는 방법
+<beans>에 context 스키마를 추가하고 URL을 추가해준다. 
+    xmlns:context="http://www.springframework.org/schema/context"
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context.xsd">
+이 떄 xmlns:(별명)은 맨뒤 context와 동일하게 설정해준다.
+    
+<context:component-scan base-package="ch29.a"/>
+
+## 정리
+- 메서드를 하나씩 선택해서 생성하는 것은 @Bean 애노테이션을 붙여주고 클래스 전체의 객체를 생성할 때는
+@Component 애노테이션을 붙여준다.
+@Bean 애노테이션은 이름을 따로 정해주지 않으면 빈에 저장될때 메서드 명으로 저장되고,
+@Component 애노테이션은 이름을 따로 정해주지 않으면 빈에 저장될 때 클래스명으로 저장된다. / 단 첫 글자는 소문자
+
+### 오후 수업 
+- getBeanDefinitionName() -> 컨테이너에 보관된 객체의 이름 꺼내기
+- bean 태그에 id와 name 차이점
+id   : 빈의 이름을 한개 설정할 때 ( 여러개를 입력하면 그 전체를 이름으로 읽음 [ex) id="c1 c2 c3" 라고 한다면 id 는 c1 c2 c3 가 된다.]
+name : 빈의 이름을 여러개 설정할 때 사용 맨처음 입력된 값이 이름 나머지는 전부 별명이 된다. 
+여러개 입력시 구분은 공백, 콤마(,), 세미콜론(;)이 가능하고 id와 name 같이 사용할 시 id가 이름이 되고 name이 전부 별명이 된다.
+
+## 빈의 생성 정책
+    scope: singleton(기본) | prototype | request | session | application | websocket
+    => singleton : 스프링 IoC 컨테이너를 준비할 때 객체를 생성한다. 그리고 객체를 한 개만 생성. 
+    => prototype : getBean()을 호출할 때 마다 생성
+    => request : (웹) 요청마다 생성
+    => session : (웹) 센션 당 한 개
+    => application : (웹) 웹 애플리케이션 당 한 개
+
+싱글톤으로 생성 한 객체는 하나만 생성해 또 호출하여도 새롭게 만드는 것이 아니라 기존 객체를 그대로 리턴하는 것이기 때문에
+여러개 만들어도 해당 객체의 값은 같다. 하지만 prototype으로 지정할 때는 getBean()을 호출할 때만 생성하는 것이기 때문에
+여러개 생성했다면 생성된 객체는 모두 각기 다른 객체이다.
+
+## 익명으로 빈을 생성할 경우
+       => 이름을 지정하지 않으면 기본으로 "패키지명.클래스명#번호" 형태로 이름이 지정된다.
+          번호는 0부터 시작한다. 
+          같은 타입의 객체가 또 있으면 번호가 1 증가한다. 
+       => 첫 번째 객체는 "패키지명.클래스명"을 별명으로 갖는다.
+       => 그러나 같은 타입에 대해 두 번째 객체부터는 별명이 붙지 않는다.
+      => @Component 애노테이션으로 빈을 생성할 때는 
+          빈의 기본 이름이 "클래스명"이다. 단 첫 번째 알파벳은 소문자이다. 
+
+이름을 지정하지 않고 객체를 생성했다면 -> (ch29.b.Car#0 ==> ch29.b.Car) 이런식으로 생성 되고 패키지를 포함한 클래스명과#0 으로 생성
+여러개 생성시 #뒤에 숫자가 증가한다. 또한 첫 번째 생성된 객체는 별명이 부여되지만 그 뒤로는 별명이 붙지 않는다. 
+
+## 생성자 호출
+- <constructor-arg><value>비트자동차</value></constructor-arg> 를 사용해서 생성자를 호출할 수 있다.
+- <constructor-arg type="int"><value>16</value></constructor-arg>
+  <constructor-arg type="String"><value>비트자동차</value></constructor-arg> 타입을 설정해서 생성자 호출가능
+- <constructor-arg type="int" index="0"><value>16</value></constructor-arg>
+  <constructor-arg type="String" index="1"><value>비트자동차</value></constructor-arg>
+타입이 같은 생성자가 여러개 있을 경우 해당 생성자의 타입과 index를 지정해서 정확하게 어떤 생성자를 호출할지 지정할 수 있다.
+- <constructor-arg value="비트자동차"/> 간단하게 정의할 수 있다.
+
+## 생성자를 쉽게 호출하는 방법
+- 생성자를 호출하려면 <constructor-arg/>라는 엘리먼트를 일일이 사용해야 하는데 이것을 네임스페이스를 사용하여 간략하게 나타낼 수 있다.
+xmlns:c="http://www.springframework.org/schema/c" 를 추가해주고 뒤에 c는 변경해서는 안된다. 다른 스키마와 달리 URL을 추가하지 않아도 사용가능하고 사용법은
+ <bean id="c1" class="ch29.c.Car" 
+        c:model="비트모델2" c:maker="비트자동차"/>
+식의 사용이 가능하다 여러개일 경우 c:_0="?", c:_1="?" 등 인덱스값을 줘서 순서로 값을 지정할 수 있다.
+
+## 프라퍼티 값 설정 (세터 사용하기)
+- 생성자로 값을 넣는 방법이 아닌 생성된 객체에 세터를 이용하여 값을 변경할 수 있다. <constructor-arg/>와 동일한 방법으로
+xmlns:p="http://www.springframework.org/schema/p"를 추가해 준다.
+
+- 프로퍼티 값을 지정할 때 타입을 지정할 수 있는데 원시타입의 경우 자동변환이 가능하지만 원시타입이 아닐경우 전체 타입을 전부 작성해야 한다.
+<property name="model"><value type="java.lang.String">모델1</value></property>
+<property name="cc"><value type="int">1980</value></property>
+
+- 프로퍼티 사용
+<property name="maker"><value type="java.lang.String">비트자동차</value></property>
+<property name="maker" value="비트자동차"/>
+p:maker="비트자동차" p:model="모델3" p:cc="2500" p:valve="16" p:auto="true"/>
+    생성자 네임스페이스와 마찬가지로 사용이 가능하다!
+    
+## 프라퍼티 값에서 의존객체 사용하기
+- 객체를 생성할 때 의존객체가 있어도 IoC 컨테이너가 알아서 의존객체를 생성하고 객체를 생성한다. 순서는 고민할 필요가 없다.
+
+ <bean id="bb1" class="ch29.d.BlackBox">
+    <property name="maker" value="비트오토"/>
+    <property name="model" value="비트박스OK"/>
+  </bean>
+  
+  <bean id="c2" class="ch29.d.Car">
+    <property name="maker" value="비트자동차"/>
+    <property name="model" value="모델1"/>
+    <property name="blackBox" ref="bb1"/>
+  </bean>
+  
+- 네임스페이스를 사용하여 더 쉽게 표현 할 수 있다.
+
+  <bean id="c3" class="ch29.d.Car"
+          p:maker="비트자동차" p:model="모델4" p:blackBox-ref="bb1"/>
+          
+## 프라퍼티를 생성할 때 의존객체를 생성하여 주입하기
+
+  <bean id="c1" class="ch29.d.Car">
+     <property name="maker" value="비트자동차"/>
+     <property name="model" value="모델1"/>
+     <property name="blackBox">
+        <!-- 이렇게 프로퍼티 태그에서 생성한 객체는 따로 참조할 수 없기 때문에 
+             이런 객체를 생성할 때는 보통 이름을 주지 않는다.
+             즉 id 나 name 속성을 지정하지 않는다. -->
+       <bean id="bb1" class="ch29.d.BlackBox">
+          <property name="maker" value="비트오토"/>
+          <property name="model" value="비트박스OK"/>
+       </bean>
+      </property>
+   </bean>
+   
+- 이렇게 생성된 의존객체는 다른 프라퍼티에서 참조할 수 없다. 참조하고 싶다면 해당 객체에 다시 정의해서 새롭게 만들어야 한다.
+이렇게 프라퍼티 안에서 생성하는 의존객체의 경우 다른객체에서 사용할 수 없으니 이름속성을 지정하지 않는다.
+
+<bean id="c3" class="ch29.d.Car">
+    <property name="maker" value="비트자동차"/>
+    <property name="model" value="모델2"/>
+    <property name="blackBox">
+      <bean class="ch29.d.BlackBox">
+        <property name="maker" value="비트오토"/>
+        <property name="model" value="비트박스OK"/>
+      </bean>
+    </property>
+  </bean>
+</beans>
+
+- 다른 객체의 프로퍼티에서 생성된 프로퍼티는 따로 꺼낼 수 없다.
+이렇게 한 객체의 프로퍼티에서 생성된 객체는 공유할 수 없다 만약 공유하고 싶다면 공유하고 싶은 객체를
+따로 프로퍼티 설정을 해줘야 공유할 수 있다.
+
+          
+          
+          
+        
+        
+        
+        
