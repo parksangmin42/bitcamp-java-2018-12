@@ -1,0 +1,49 @@
+### XML을 사용하여 @Component 애노테이션 사용법 
+
+## @Component 애노테이션
+- 스프링 IoC 컨테이너가 관리할 객체에 붙이는 애노테이션
+
+<context:component-scan base-package="ch29.i"/>
+ ㄴ xml에 context를 추가하고 사용할 수 있다.
+    이렇게 사용하면 ch29.i 패키지에서 @Component 애노테이션이 붙은 클래스를 찾아 객체를 생성한다.
+
+이때 <context:component-scan> 태그를 사용하면 
+<context:annotation-config> 태그를 자동 활성화시킨다.
+
+- base-package 값을 여러개 설정 할 수 있다.
+<context:component-scan base-package="ch29.i,ch29.i2">
+ ㄴ (,)를 사용해 여러개의 패키지를 지정할 수 있다.
+
+## <context:component-scan> 사용법과 특정 패키지나 클래스 제외시키기
+- 해당 태그를 사용하면 패키지내에 있는 특정 패키지나 클래스를 포함/제외 시킬 수 있다.
+
+<context:exclude-filter type="annotation" expression=""/>
+  ㄴ 특정 클래스나 패키지를 제외시키는 문법 component-scan의 하위 엘리먼트
+     type : regex 
+     expression : 제외시킬 패키지나 클래스명
+     
+<context:include-filter type="annotation" expression=""/>
+  ㄴ 특정 클래스나 패키지를 포함시키는 문법 component-scan의 하위 엘리먼트
+     type : annotaion(특정 애노테이션이 붙은 클래스 포함하기)
+     expression : 포함시킬 애노테이션의 import 주소를 적어준다
+     ex) @Controller 애노테이션인 경우 import 해보면 나오는 주소값을 넣어준다.
+     (org.springframework.stereotype.Controller)
+     
+## Component 애노테이션의 종류와 하위 애노테이션
+- @Component : 일반 클래스에 대해 붙인다.
+  @Repository : DAO 역할을 수행하는 클래스에 대해 붙인다.
+  @Service : 비즈니스 로직을 수행하는 클래스에 대해 붙인다.
+  @Controller : MVC 구조에서 컨트롤러 역할을 하는 클래스에 대해 붙인다.
+  
+@Component 애노테이션이 포괄적인 의미를 가진 애노테이션이라면 나머지 애노테이션들은
+각각의 역할에 좀더 집중할 수 있는 애노테이션이다.  
+context:component를 사용하면 4가지 애노테이션에 대해 전부 객체를 생성한다
+
+
+### Java config를 사용하여 IoC 컨테이너 설정하기
+
+    
+
+
+
+Spring AOP : proxy사용 reflection API 사용
