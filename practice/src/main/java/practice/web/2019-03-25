@@ -1,0 +1,36 @@
+### html 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 문법
+<form> 서버에 보낼 데이터 </from>
+tr = table row (데이터의 한줄)
+th = table header (제목, 라벨)
+td = table data (테이블의 데이터)
+
+<input type=?>
+ ㄴ 한줄만 입력할 때
+ 
+ type에 들어갈 수 있는 것
+ 1. password - 비밀번호를 보여주지 않고 ●로 처리
+ 2. email - email 양식에 맞추지 않으면 오류
+ 3. number - 문자열 말고 숫자를 입력 받아야 하는 경우
+ 4. date - 날자를 입력할 때 (달력을 제공한다!)
+ 
+ 
