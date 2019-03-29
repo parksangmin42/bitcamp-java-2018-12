@@ -1,0 +1,17 @@
+### 3월 29일 금요일
+
+톰캣 서버에서 파일 데이터를 보낼 때 지정된 
+
+멀티파트 관리시 서블릿3.0에서 제공하는 라이브러리 / 아파치 라이브러리 / xml 설정으로도 가능하다
+
+서블릿 - 서버프로그램의 규칙을 통일시켜 일관성을 주는 기술
+
+// HTTP 프로토콜 다루기
+- 매번 http 서블릿을 받아 확인하기 힘들기에 MyHttpServlet을 만들어서 http 서블릿을 리턴해주는 클래스를 정의한다.
+
+HttpServlet = ServletRequest, ServletResponse 값을 Http 프로토콜 타입으로 형 변환하고 
+요청 방식에 따라 나눠서 오버라이딩 할 수 있도록 나눠놓은 클래스
+
+webapp이 없는 상태에서 gradle eclipse하면 배치폴더 자동생성 불가
+webapp 폴더 만든 후 다시 gradle eclipse 해줘야 한다.
+.setting 폴더 확인 
