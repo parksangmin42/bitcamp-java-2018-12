@@ -15,25 +15,27 @@ import com.eomcs.lms.service.BoardService;
 public class BoardDetailServlet extends HttpServlet {
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+  protected void doGet(
+      HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
-
-    // Spring IoC Container에서 BoardService 객체를 꺼낸다. 알아낸다.
+    
+    // Spring IoC 컨테이너에서 BoardService 객체를 꺼낸다.
     BoardService boardService = 
         InitServlet.iocContainer.getBean(BoardService.class);
     
     int no = Integer.parseInt(request.getParameter("no"));
-
+    
     Board board = boardService.get(no);
-
+    
     response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();
+    
     out.println("<html><head><title>게시물 조회</title></head>");
     out.println("<body><h1>게시물 조회</h1>");
-
+    
     if (board == null) {
       out.println("<p>해당 번호의 게시물이 없습니다.</p>");
-
+      
     } else {
       out.println("<form action='update' method='post'>");
       out.println("<table border='1'>");
@@ -43,13 +45,13 @@ public class BoardDetailServlet extends HttpServlet {
           + "</tr>\n", no);
       out.println(String.format(
           "<tr> <th>내용</th> "
-              + "<td><textarea name='contents' rows='3' cols='50'>%s</textarea></td> "
-              + "</tr>", board.getContents()));
+          + "<td><textarea name='contents' rows='3' cols='50'>%s</textarea></td> "
+          + "</tr>", board.getContents()));
       out.println(String.format(
           "<tr> <th>작성일</th> <td>%s</td> </tr>", board.getCreatedDate()));
       out.println(String.format(
           "<tr> <th>조회수</th> <td>%d</td> </tr>", board.getViewCount()));
-
+      
       out.println("</table>");
       out.println("<p><a href='list'>목록</a>"
           + " <a href='delete?no=" + board.getNo() + "'>삭제</a>"
@@ -59,6 +61,7 @@ public class BoardDetailServlet extends HttpServlet {
     }
     out.println("</body></html>");
   }
+
 }
 
 

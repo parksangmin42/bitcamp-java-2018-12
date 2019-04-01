@@ -14,14 +14,13 @@ import com.eomcs.lms.service.MemberService;
 @SuppressWarnings("serial")
 @WebServlet("/member/search")
 public class MemberSearchServlet extends HttpServlet {
-
+  
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
     MemberService memberService = InitServlet.iocContainer.getBean(MemberService.class);
-
-
+    
     String keyword = request.getParameter("keyword");
     List<Member> members = memberService.list(keyword);
 
@@ -31,20 +30,20 @@ public class MemberSearchServlet extends HttpServlet {
     out.println("<body><h1>회원 검색</h1>");
     out.println("<table border='1'>");
     out.println("<tr><th>번호</th><th>이름</th><th>이메일</th><th>전화</th><th>가입일</th></tr>");
-
+    
     for (Member member : members) {
       out.println(String.format(
           "<tr><td>%d</td><td><a href='detail?no=%1$d'>%s</a></td>"
-              + "<td>%s</td><td>%s</td><td>%s</td></tr>", 
-              member.getNo(), 
-              member.getName(), 
-              member.getEmail(), 
-              member.getTel(), 
-              member.getRegisteredDate()));
+          + "<td>%s</td><td>%s</td><td>%s</td></tr>", 
+          member.getNo(), 
+          member.getName(), 
+          member.getEmail(), 
+          member.getTel(), 
+          member.getRegisteredDate()));
     }
     out.println("</table>");
     out.println("<p><a href='list'>목록</a></p>");
     out.println("</body></html>");
   }
-
+  
 }

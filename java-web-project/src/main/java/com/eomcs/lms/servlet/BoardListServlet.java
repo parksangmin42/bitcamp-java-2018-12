@@ -16,10 +16,11 @@ import com.eomcs.lms.service.BoardService;
 public class BoardListServlet extends HttpServlet {
   
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+  protected void doGet(
+      HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     
-    // Spring IoC Container에서 BoardService 객체를 꺼낸다. 알아낸다.
+    // Spring IoC 컨테이너에서 BoardService 객체를 꺼낸다.
     BoardService boardService = 
         InitServlet.iocContainer.getBean(BoardService.class);
     
@@ -43,6 +44,7 @@ public class BoardListServlet extends HttpServlet {
     }
     out.println("</table></body></html>");
   }
+
 }
 
 

@@ -2,7 +2,7 @@
 // => 서블릿이 작업을 수행하려면 XxxxService 객체가 필요하다.
 // => 서비스 객체는 Spring IoC 컨테이너에 들어 있다.
 // => 이 클래스에서 바로 그 Spring IoC 컨테이너를 준비한다.
-//
+// 
 package com.eomcs.lms;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -13,13 +13,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import com.eomcs.lms.context.RequestMappingHandlerMapping;
 
-
 @SuppressWarnings("serial")
 @WebServlet(
-    urlPatterns = "/init", 
+    urlPatterns = "/init",
     loadOnStartup = 1)
 public class InitServlet extends HttpServlet {
-
+   
   // 보통 클래스에서 사용할 로그 출력 객체는 클래스의 스태틱 멤버로 선언한다.
   final static Logger logger = LogManager.getLogger(InitServlet.class);
 
