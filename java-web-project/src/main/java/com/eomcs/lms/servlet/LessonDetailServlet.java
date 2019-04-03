@@ -1,12 +1,13 @@
 package com.eomcs.lms.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.eomcs.lms.InitServlet;
+import org.springframework.context.ApplicationContext;
 import com.eomcs.lms.domain.Lesson;
 import com.eomcs.lms.service.LessonService;
 
@@ -18,7 +19,10 @@ public class LessonDetailServlet extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    LessonService lessonService = InitServlet.iocContainer.getBean(LessonService.class);
+    ServletContext sc = this.getServletContext();
+    ApplicationContext iocContainer = 
+        (ApplicationContext) sc.getAttribute("iocContainer");
+    LessonService lessonService = iocContainer.getBean(LessonService.class);
 
     int no = Integer.parseInt(request.getParameter("no"));
 
@@ -27,7 +31,11 @@ public class LessonDetailServlet extends HttpServlet {
     response.setContentType("text/html;charset=UTF-8");
     PrintWriter out = response.getWriter();
     out.println("<html><head><title>수업 조회</title></head>");
-    out.println("<body><h1>수업 조회</h1>");
+    out.println("<body>");
+
+    // 헤더를 출력한다.
+    request.getRequestDispatcher("/header").include(request, response);
+    out.println("<h1>수업 조회</h1>");
 
     if (lesson == null) {
       out.println("<p>해당 번호의 수입이 없습니다.</p>");
