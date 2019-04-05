@@ -11,15 +11,13 @@ import com.eomcs.lms.domain.Member;
 
 @SuppressWarnings("serial")
 @WebServlet("/header")
-public class HeaderServler extends HttpServlet {
-
-
-
+public class HeaderServlet extends HttpServlet {
+  
   @Override
   protected void service(
       HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException {
-
+      throws ServletException, IOException {
+    
     HttpSession session = request.getSession();
     Member loginUser = (Member) session.getAttribute("loginUser");
     String contextRootPath = getServletContext().getContextPath();
@@ -27,12 +25,11 @@ public class HeaderServler extends HttpServlet {
     PrintWriter out = response.getWriter();
     out.println("<header>");
     out.println("  <img src='http://bitcamp.co.kr/img/logo.jpg' style='height:50px'>");
-
     if (loginUser == null) {
       out.printf("<a href='%s/auth/login'>로그인</a>", contextRootPath);
-
+      
     } else {
-      out.printf("<image src='%s/upload/member/%s' style='height:20px;'> %s", 
+      out.printf("<img src='%s/upload/member/%s' style='height:20px;'> %s",
           contextRootPath,
           loginUser.getPhoto(), 
           loginUser.getName());
@@ -41,17 +38,7 @@ public class HeaderServler extends HttpServlet {
     }
     out.println("</header>");
   }
-
 }
-
-
-
-
-
-
-
-
-
 
 
 

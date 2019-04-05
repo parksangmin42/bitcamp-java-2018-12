@@ -10,31 +10,32 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@SuppressWarnings("serial")
 @WebServlet("/ex10/s11")
+@SuppressWarnings("serial")
 public class Servlet11 extends HttpServlet {
-
+  
   @Override
-  protected void service(HttpServletRequest request, 
+  protected void service(
+      HttpServletRequest request, 
       HttpServletResponse response)
-          throws ServletException, IOException {
-
+      throws ServletException, IOException {
+    
     // 테스트 방법:
-    // http://localhost:8080/java-web/ex10/s11
+    // => http://localhost:8080/java-web/ex10/s11
     //
     
     // 쿠키 유효기간
     // => 유효기간을 설정하면 그 기간 동안에만 웹서버에게 쿠키를 보낸다.
-    
+    // => HTTP 응답 프로토콜
 /*
 HTTP/1.1 200
-Set-Cookie: v1=aaa <---- 유효기간이 설정되지 않은 쿠키
+Set-Cookie: v1=aaa  <---- 유효기간이 설정되지 않은 쿠키
 Set-Cookie: v2=bbb; Max-Age=30; Expires=Wed, 03-Apr-2019 01:33:10 GMT
-Set-Cookie: v2=ccc; Max-Age=60; Expires=Wed, 03-Apr-2019 01:33:40 GMT
+Set-Cookie: v3=ccc; Max-Age=60; Expires=Wed, 03-Apr-2019 01:33:40 GMT
 Content-Type: text/plain;charset=UTF-8
 Content-Length: 36
 Date: Wed, 03 Apr 2019 01:32:40 GMT
-*/
+ */
     
     // 유효기간을 설정하지 않으면 웹브라우저가 실행되는 동안에만 웹서버에게 쿠키를 보낸다.
     Cookie c1 = new Cookie("v1", "aaa");
@@ -47,7 +48,7 @@ Date: Wed, 03 Apr 2019 01:32:40 GMT
     Cookie c3 = new Cookie("v3", "ccc");
     c3.setMaxAge(60); // 쿠키를 보낸 이후 60초 동안만 유효
     
-    // 쿠키를 응답헤더에 포함시키기 
+    // 쿠키를 응답 헤더에 포함시키기
     response.addCookie(c1);
     response.addCookie(c2);
     response.addCookie(c3);
@@ -56,42 +57,7 @@ Date: Wed, 03 Apr 2019 01:32:40 GMT
     PrintWriter out = response.getWriter();
     
     out.println("/ex10/s11 - 쿠키 보냈습니다.");
-    
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

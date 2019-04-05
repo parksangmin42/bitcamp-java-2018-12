@@ -11,10 +11,12 @@ repositories {
 dependencies {
     // Servlet API 라이브러리
     providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
-    
-    // 멀티파트 형식의 데이터 처리 라이브러리 apache fileupload
+
+    // 멀티파트 형식의 데이터 처리 라이브러리
     compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+
+    // 썸네일 이미지 생성 라이브러리
+    compile group: 'net.coobird', name: 'thumbnailator', version: '0.4.8'
     
     testImplementation 'junit:junit:4.12'
-    
 }

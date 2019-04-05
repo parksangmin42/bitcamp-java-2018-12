@@ -10,17 +10,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@SuppressWarnings("serial")
 @WebServlet("/ex10/a/b/c/s23")
+@SuppressWarnings("serial")
 public class Servlet23 extends HttpServlet {
-
+  
   @Override
-  protected void service(HttpServletRequest request, 
+  protected void service(
+      HttpServletRequest request, 
       HttpServletResponse response)
-          throws ServletException, IOException {
-
+      throws ServletException, IOException {
+    
     // 테스트 방법:
-    // http://localhost:8080/java-web/ex10/a/b/c/s23
+    // => http://localhost:8080/java-web/ex10/a/b/c/s23
     //
     
     Cookie[] cookies = request.getCookies();
@@ -36,39 +37,5 @@ public class Servlet23 extends HttpServlet {
     
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
