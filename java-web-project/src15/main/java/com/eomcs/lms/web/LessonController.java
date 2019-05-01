@@ -22,23 +22,22 @@ public class LessonController {
   }
   
   @PostMapping("add")
-  public String add(Lesson lesson) throws Exception {
+  public String add(Lesson lesson) {
     lessonService.add(lesson);
     return "redirect:.";
   }
   
   @GetMapping("delete/{no}")
-  public String delete(@PathVariable int no) throws Exception {
+  public String delete(@PathVariable int no) {
 
     if (lessonService.delete(no) == 0) 
-      throw new Exception("해당 번호의 수업이 없습니다.");
+      throw new RuntimeException("해당 번호의 수업이 없습니다.");
       
     return "redirect:../";
   }
   
   @GetMapping("{no}")
-  public String detail(@PathVariable int no, Model model) throws Exception {
-
+  public String detail(@PathVariable int no, Model model) {
     Lesson lesson = lessonService.get(no);
     model.addAttribute("lesson", lesson);
     return "lesson/detail";
@@ -52,10 +51,9 @@ public class LessonController {
   }
   
   @PostMapping("update")
-  public String update(Lesson lesson) throws Exception {
+  public String update(Lesson lesson) {
     if (lessonService.update(lesson) == 0)
-      throw new Exception("해당 번호의 수업이 없습니다.");
-    
+      throw new RuntimeException("해당 번호의 수업이 없습니다.");
     return "redirect:.";
   }
 }

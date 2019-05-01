@@ -17,8 +17,9 @@ import com.eomcs.lms.service.MemberService;
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
-  
+
   final static Logger logger = LogManager.getLogger(AuthController.class);
+  
   static final String REFERER_URL = "refererUrl";
 
   @Autowired MemberService memberService;
@@ -31,7 +32,7 @@ public class AuthController {
     
     logger.debug("refererUrl: " + refererUrl);
     
-    if(refererUrl != null && !refererUrl.endsWith("/auth/login")) {
+    if (refererUrl != null && !refererUrl.endsWith("/auth/login")) {
       session.setAttribute(REFERER_URL, refererUrl);
     } else {
       session.removeAttribute(REFERER_URL);
@@ -44,7 +45,7 @@ public class AuthController {
       String password,
       String saveEmail,
       HttpSession session,
-      HttpServletResponse response) throws Exception {
+      HttpServletResponse response) {
 
     Cookie cookie;
     if (saveEmail != null) {
