@@ -7,12 +7,13 @@ import com.eomcs.lms.domain.Member;
 
 public interface MemberDao {
   int insert(Member member);
-  List<Member> findAll();
-  List<Member> findByKeyword(String keyword);
+  List<Member> findAll(Map<String,Object> paramMap);
   Member findByNo(int no);
   Member findByEmailPassword(Map<String,Object> paramMap);
+  Member findByEmail(String email);
   int update(Member member);
   int delete(int no);
+  int countAll(String search);
 }
 
 
